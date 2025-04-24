@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Heart Disease Prediction</h1>
+            <form id="predictionForm">
+                <div class="input-group">
+                    <input type="number" id="age" name="age" placeholder="Enter Age" required>
+                </div>
+                <div class="input-group">
+                    <label for="cp">Chest Pain Type:</label>
+                    <select id="cp" name="cp" required>
+                        <option value="0">0: Typical Angina</option>
+                        <option value="1">1: Atypical Angina</option>
+                        <option value="2">2: Non-Anginal Pain</option>
+                        <option value="3">3: Asymptomatic</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="thalach" name="thalach" placeholder="Max Heart Rate Achieved" required>
+                </div>
+                <button type="button" class="btn" onclick="makePrediction()">Predict</button>
+            </form>
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+    <script>
+        async function makePrediction() {
+            const form = document.getElementById('predictionForm');
+            const formData = new FormData(form);
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            const resultDiv = document.getElementById('result');
+            if (data.result) {
+                resultDiv.textContent = `Prediction: ${data.result}`;
+            } else if (data.error) {
+                resultDiv.textContent = `Error: ${data.error}`;
+            }
+        }
+    </script>
+</body>
+</html>
